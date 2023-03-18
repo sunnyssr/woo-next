@@ -6,12 +6,12 @@ import CategoriesList from "@/components/common/categories-list/categories-list"
 import type { ProductListItem, ProductCategoryItem } from "@/lib/types/api";
 import Header from "@/components/common/header/header";
 
-type StorefrontProps = {
-  featuredProducts: ProductListItem[];
-  mainCategories: ProductCategoryItem[];
+type CategoryPageProps = {
+  products: ProductListItem[];
+  categories: ProductCategoryItem[];
 };
 
-export default function Storefront(props: StorefrontProps) {
+const CategoryPage = (props: CategoryPageProps) => {
   return (
     <>
       <Head>
@@ -22,15 +22,23 @@ export default function Storefront(props: StorefrontProps) {
       </Head>
       <main className="">
         <Header />
+        {props.categories.length > 0 ? (
+          <Container className="py-6">
+            <h2 className="text-center font-medium text-3xl mb-6">Categories</h2>
+            <CategoriesList
+              categories={props.categories
+                .filter((c) => c.slug !== "uncategorized")
+                .sort((a, b) => a.menu_order - b.menu_order)}
+            />
+          </Container>
+        ) : null}
         <Container className="py-6">
-          <h2 className="text-center font-medium text-3xl mb-6">Categories</h2>
-          <CategoriesList categories={props.mainCategories} />
-        </Container>
-        <Container className="py-6">
-          <h2 className="text-center font-medium text-3xl mb-6">Featured Products</h2>
-          <ProductsList products={props.featuredProducts} />
+          <h2 className="text-center font-medium text-3xl mb-6">Products</h2>
+          <ProductsList products={props.products} />
         </Container>
       </main>
     </>
   );
-}
+};
+
+export default CategoryPage;

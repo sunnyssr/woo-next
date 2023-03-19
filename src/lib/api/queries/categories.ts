@@ -5,7 +5,8 @@ import { WOO_GET_CATEGORIES_ENDPOINT } from "../endpoints";
 export const getMainCategories = async (): Promise<ProductCategoryItem[] | void> => {
   try {
     const response = await wooClient.get(WOO_GET_CATEGORIES_ENDPOINT, { parent: 0 });
-    const json = response.data;
+    const json = await response.json();
+    console.log(json);
     return json as ProductCategoryItem[];
   } catch (error) {
     console.log("[getMainCategories]: error while fetching main categories" + error);
@@ -17,7 +18,7 @@ export const getCategoryDetailsBySlug = async (
 ): Promise<ProductCategoryItem[] | void> => {
   try {
     const response = await wooClient.get(WOO_GET_CATEGORIES_ENDPOINT, { slug: categorySlug });
-    const json = response.data;
+    const json = await response.json();
     return json as ProductCategoryItem[];
   } catch (error) {
     console.log("[getCategoryDetailsBySlug]: error while fetching category details" + error);
@@ -29,7 +30,7 @@ export const getSubCategoriesByParentId = async (
 ): Promise<ProductCategoryItem[] | void> => {
   try {
     const response = await wooClient.get(WOO_GET_CATEGORIES_ENDPOINT, { parent: parentCategoryId });
-    const json = response.data;
+    const json = await response.json();
     return json as ProductCategoryItem[];
   } catch (error) {
     console.log("[getSubCategoriesByParentId]: error while fetching subcategories" + error);

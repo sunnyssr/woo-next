@@ -2,6 +2,8 @@ import Container from "@/components/common/container/container";
 import Head from "next/head";
 import React from "react";
 import { ProductListItem } from "../../../lib/types/api";
+import Header from "@/components/common/header/header";
+import ImagesSlider from "@/components/common/images-slider";
 
 export type ProductPageProps = {
   product: ProductListItem;
@@ -16,8 +18,11 @@ const ProductPage = (props: ProductPageProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="">
+        <Header />
         <Container className="py-6 grid sm:grid-cols-12 gap-6">
-          <div className="col-span-6"></div>
+          <div className="col-span-6">
+            <ImagesSlider images={props.product.images} />
+          </div>
           <div className="col-span-6">
             <h2 className="font-light text-4xl">{props.product.name}</h2>
             <p

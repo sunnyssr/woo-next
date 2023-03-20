@@ -38,6 +38,7 @@ const ProductItem = (props: ProductItemProps) => {
             width={400}
             height={400}
           />
+          <span className="sr-only">{props.product.name}</span>
         </Link>
 
         <div className="px-4 pt-2 pb-4 ">

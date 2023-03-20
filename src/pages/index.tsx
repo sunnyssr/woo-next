@@ -24,3 +24,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
   };
 };
+
+export const revalidate = 3600;

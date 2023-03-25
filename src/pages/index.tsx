@@ -1,8 +1,8 @@
 import { getFeaturedProducts } from "@/lib/api/queries/products";
 import Storefront from "@/components/_pages/storefront";
+import { getMainCategories } from "@/lib/api/queries/categories";
 
 import type { GetServerSideProps } from "next";
-import { getMainCategories } from "@/lib/api/queries/categories";
 
 export default Storefront;
 

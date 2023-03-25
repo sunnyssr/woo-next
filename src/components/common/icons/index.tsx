@@ -12,17 +12,17 @@ export const CategoryIcon = (props: IconProps) => {
     >
       <g
         id="Iconly/Light/Category"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        fillRule="evenodd"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       >
         <g
           id="Category"
           transform="translate(2.999141, 3.000000)"
           stroke="currentColor"
-          stroke-width="2"
+          strokeWidth="2"
         >
           <path
             d="M0.000858865205,3.5 C0.000858865205,0.874787053 0.0289681101,0 3.50085887,0 C6.9727494,0 7.00085887,0.874787053 7.00085887,3.5 C7.00085887,6.12521295 7.01193168,7 3.50085887,7 C-0.010214169,7 0.000858865205,6.12521295 0.000858865205,3.5 Z"

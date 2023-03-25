@@ -7,8 +7,10 @@ import type { GetServerSideProps } from "next";
 export default Storefront;
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const featuredProducts = await getFeaturedProducts();
-  const mainCategories = await getMainCategories();
+  const [featuredProducts, mainCategories] = await Promise.all([
+    getFeaturedProducts(),
+    getMainCategories(),
+  ]);
   if (!mainCategories) {
     return {
       notFound: true,

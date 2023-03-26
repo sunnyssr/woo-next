@@ -1,13 +1,15 @@
-import BlogsListPage from "@/components/_pages/blog";
-import type { GetServerSideProps } from "next";
-import { getPosts } from "../../lib/api/queries/posts";
 import { load } from "cheerio";
+import BlogsListPage from "@/components/_pages/blog";
+import { getServerSidePropsWrapper } from "@/lib/getServerSidePropsWrapper";
+import { getPosts } from "@/lib/api/queries/posts";
+
+import type { GetServerSideProps } from "next";
 
 export default BlogsListPage;
 
 const POSTS_PER_PAGE = 3;
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps = getServerSidePropsWrapper(async (ctx) => {
   const pageNumber = Number(ctx.params?.pageNumber?.toString()) || 1;
   const postsResp = await getPosts({
     per_page: POSTS_PER_PAGE,
@@ -32,4 +34,4 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       hasNextPage: pageNumber !== postsResp.totalPages,
     },
   };
-};
+});

@@ -1,11 +1,12 @@
-import { getPosts } from "../../lib/api/queries/posts";
 import BlogSinglePage from "@/components/_pages/blog-single";
+import { getServerSidePropsWrapper } from "@/lib/getServerSidePropsWrapper";
+import { getPosts } from "@/lib/api/queries/posts";
 
 import type { GetServerSideProps } from "next";
 
 export default BlogSinglePage;
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps = getServerSidePropsWrapper(async (ctx) => {
   const postSlug = ctx.params?.slug?.toString();
   if (!postSlug) {
     return {
@@ -27,4 +28,4 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       post: postsResp.posts[0],
     },
   };
-};
+});

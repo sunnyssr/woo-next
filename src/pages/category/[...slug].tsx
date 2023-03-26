@@ -1,4 +1,5 @@
 import CategoryPage from "@/components/_pages/category";
+import { getServerSidePropsWrapper } from "@/lib/getServerSidePropsWrapper";
 import { getCategoryDetailsBySlug, getSubCategoriesByParentId } from "@/lib/api/queries/categories";
 import { getProductsByCategoryId } from "@/lib/api/queries/products";
 
@@ -6,7 +7,7 @@ import type { GetServerSideProps } from "next";
 
 export default CategoryPage;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = getServerSidePropsWrapper(async (context) => {
   const categorySlug = context.params?.slug?.[context.params?.slug?.length - 1];
 
   if (!categorySlug)
@@ -20,9 +21,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       notFound: true,
     };
 
-  const subCategories = await getSubCategoriesByParentId(category[0].id);
-
-  const products = await getProductsByCategoryId(category[0].id);
+  const [subCategories, products] = await Promise.all([
+    getSubCategoriesByParentId(category[0].id),
+    getProductsByCategoryId(category[0].id),
+  ]);
 
   return {
     props: {
@@ -30,4 +32,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       categories: subCategories || [],
     },
   };
-};
+});

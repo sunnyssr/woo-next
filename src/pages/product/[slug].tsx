@@ -1,11 +1,12 @@
 import ProductPage from "@/components/_pages/product";
+import { getServerSidePropsWrapper } from "@/lib/getServerSidePropsWrapper";
 import { getProductById, getProductBySlug } from "@/lib/api/queries/products";
 
 import type { GetServerSideProps } from "next";
 
 export default ProductPage;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = getServerSidePropsWrapper(async (context) => {
   const productSlug = context.params?.slug?.toString() || "";
   const products = await getProductBySlug(productSlug);
   if (!products)
@@ -19,4 +20,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       product: productDetails,
     },
   };
-};
+});

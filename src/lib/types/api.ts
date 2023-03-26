@@ -101,3 +101,111 @@ export type ProductCategoryItem = {
     date_modified_gmt: string;
   };
 };
+
+export type BlogPostMedia = {
+  file: string;
+  width: number;
+  height: number;
+  filesize: number;
+  mime_type: string;
+  source_url: string;
+};
+
+export type BlogFeaturedMedia = {
+  id: number;
+  date: string;
+  slug: string;
+  type: string;
+  link: string;
+  title: {
+    rendered: string;
+  };
+  author: number;
+  caption: {
+    rendered: string;
+  };
+  alt_text: string;
+  media_type: string;
+  mime_type: string;
+  media_details: {
+    width: number;
+    height: number;
+    file: string;
+    filesize: number;
+    sizes: {
+      medium: BlogPostMedia;
+      large: BlogPostMedia;
+      thumbnail: BlogPostMedia;
+      medium_large: BlogPostMedia;
+      "1536x1536": BlogPostMedia;
+      "2048x2048": BlogPostMedia;
+      woocommerce_thumbnail: BlogPostMedia;
+      woocommerce_single: BlogPostMedia;
+      woocommerce_gallery_thumbnail: BlogPostMedia;
+      full: BlogPostMedia;
+    };
+    image_meta: Record<string, any>;
+    original_image: string;
+  };
+  source_url: string;
+};
+
+export type BlogPostListItem = {
+  id: number;
+  date: string;
+  date_gmt: string;
+  guid: {
+    rendered: string;
+  };
+  modified: string;
+  modified_gmt: string;
+  slug: string;
+  status: string;
+  type: string;
+  link: string;
+  title: {
+    rendered: string;
+  };
+  content: {
+    rendered: string;
+    protected: boolean;
+  };
+  excerpt: {
+    rendered: string;
+    protected: boolean;
+  };
+  author: number;
+  featured_media: number;
+  comment_status: string;
+  ping_status: string;
+  sticky: false;
+  template: string;
+  format: string;
+  // meta: [];
+  categories: number[];
+  tags: string[];
+
+  _embedded: {
+    author: {
+      id: number;
+      name: string;
+      url: string;
+      description: string;
+      link: string;
+      slug: string;
+      avatar_urls: {
+        "24": string;
+        "48": string;
+        "96": string;
+      };
+    }[];
+    "wp:term": {
+      id: number;
+      link: string;
+      name: string;
+      slug: string;
+      taxonomy: string;
+    }[][];
+    "wp:featuredmedia": BlogFeaturedMedia[];
+  };
+};

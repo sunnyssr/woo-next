@@ -76,3 +76,25 @@ export const wooClient = {
     return createRequest("options", endpoint, null, params, request);
   },
 };
+
+export const wpBaseClient = (
+  method: "GET" | "POST" | "PUT" | "DELETE" | "OPTIONS",
+  endpoint: string,
+  params: string | string[][] | Record<string, any> | URLSearchParams | undefined = {},
+  data: any = undefined,
+  request: RequestInit = {}
+) => {
+  let url = new URL(`${WPBaseUrl}/wp-json/${endpoint}`);
+  if (typeof params == "object" && Object.keys(params).length > 0) {
+    url = new URL(`${url.origin}${url.pathname}?${new URLSearchParams(params).toString()}`);
+  }
+  const config: RequestInit = { method: method.toUpperCase(), ...request };
+  if (data) {
+    config.body = JSON.stringify(data);
+  }
+  return fetch(url.href, {
+    next: { revalidate: 15 * 60 },
+    ...config,
+    cache: "force-cache",
+  });
+};

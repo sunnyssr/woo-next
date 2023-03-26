@@ -6,7 +6,6 @@ export const getMainCategories = async (): Promise<ProductCategoryItem[] | void>
   try {
     const response = await wooClient.get(WOO_GET_CATEGORIES_ENDPOINT, { parent: 0 });
     const json = await response.json();
-    console.log(json);
     return json as ProductCategoryItem[];
   } catch (error) {
     console.log("[getMainCategories]: error while fetching main categories" + error);

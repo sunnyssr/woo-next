@@ -6,6 +6,7 @@ import type { BlogPostListItem } from "@/lib/types/api";
 
 type BlogPostItemProps = {
   blogPost: BlogPostListItem;
+  darkMode: boolean;
 };
 const cardVariants: Variants = {
   offscreen: {
@@ -48,7 +49,11 @@ const BlogPostItem = (props: BlogPostItemProps) => {
           <span className="sr-only">{props.blogPost.title.rendered}</span>
         </Link>
 
-        <div className="px-6 pt-4 pb-4 ">
+        <div
+          className={`px-6 pt-4 pb-4 ${
+            props.darkMode ? "bg-white bg-opacity-10 text-white" : "text-black bg-white"
+          } `}
+        >
           <Link href={`/blog/${props.blogPost.slug}`}>
             <h3 className="text-2xl mb-1">{props.blogPost.title.rendered}</h3>
           </Link>
@@ -61,13 +66,23 @@ const BlogPostItem = (props: BlogPostItemProps) => {
               src={props.blogPost._embedded.author?.[0]?.avatar_urls?.[48]}
               className="h-5 w-5 rounded-full"
             />
-            <span className="ml-1 text-gray-600">{props.blogPost._embedded.author?.[0]?.name}</span>
+            <span
+              className={`ml-1 tracking-wide ${props.darkMode ? "text-gray-200" : "text-gray-600"}`}
+            >
+              {props.blogPost._embedded.author?.[0]?.name}
+            </span>
           </p>
-          <p className="text-sm text-gray-500">
+          <p className={`text-sm ${props.darkMode ? "text-gray-300" : "text-gray-500"}`}>
             {props.blogPost.excerpt.rendered.slice(0, 240)}...
           </p>
           <Link href={`/blog/${props.blogPost.slug}`}>
-            <button className="mt-2 transition-colors duration-200 text-black border border-solid border-black text-sm px-4 py-1 rounded-full hover:bg-black hover:text-white">
+            <button
+              className={`mt-2 transition-colors duration-200 border border-solid text-sm px-4 py-1 rounded-full ${
+                props.darkMode
+                  ? "text-white border-white hover:bg-white hover:text-black"
+                  : "text-black border-black hover:bg-black hover:text-white"
+              }`}
+            >
               Read More
             </button>
           </Link>

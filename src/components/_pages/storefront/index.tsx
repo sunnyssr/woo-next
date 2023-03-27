@@ -1,14 +1,17 @@
+import Link from "next/link";
 import Head from "next/head";
 import Layout from "@/components/common/layout/layout";
 import Container from "@/components/common/container/container";
 import ProductsList from "@/components/common/products-list/products-list";
 import CategoriesList from "@/components/common/categories-list/categories-list";
 
-import type { ProductListItem, ProductCategoryItem } from "@/lib/types/api";
+import type { ProductListItem, ProductCategoryItem, BlogPostListItem } from "@/lib/types/api";
+import BlogPostsList from "@/components/common/blog-posts-list/blog-posts-list";
 
 type StorefrontProps = {
   featuredProducts: ProductListItem[];
   mainCategories: ProductCategoryItem[];
+  blogPosts: BlogPostListItem[];
 };
 
 export default function Storefront(props: StorefrontProps) {
@@ -21,14 +24,25 @@ export default function Storefront(props: StorefrontProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="">
-        <Container className="py-6">
-          <h2 className="text-center font-medium text-3xl mb-6">Categories</h2>
+        <Container className="py-10">
+          <h2 className="mb-6 text-3xl font-medium text-center">Categories</h2>
           <CategoriesList categories={props.mainCategories} />
         </Container>
-        <Container className="py-6">
-          <h2 className="text-center font-medium text-3xl mb-6">Featured Products</h2>
+        <Container className="py-10">
+          <h2 className="mb-6 text-3xl font-medium text-center">Featured Products</h2>
           <ProductsList products={props.featuredProducts} />
         </Container>
+        <div className="bg-black ">
+          <Container className="py-10 flex flex-col items-center">
+            <h2 className="mb-6 text-3xl font-medium text-center text-white">Blog</h2>
+            <BlogPostsList blogPosts={props.blogPosts || []} darkMode={false} />
+            <Link href="/blog">
+              <button className="px-6 mt-6 py-1 text-lg font-light text-white transition-colors duration-200 border border-white border-solid rounded-full hover:bg-white hover:text-black">
+                Show More
+              </button>
+            </Link>
+          </Container>
+        </div>
       </main>
     </Layout>
   );

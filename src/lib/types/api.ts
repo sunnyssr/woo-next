@@ -209,3 +209,13 @@ export type BlogPostListItem = {
     "wp:featuredmedia": BlogFeaturedMedia[];
   };
 };
+
+export type BlogCategoryListItem = {
+  id: number;
+  count: number;
+  description: string;
+  slug: string;
+  name: string;
+  taxonomy: string;
+  parent: number;
+};

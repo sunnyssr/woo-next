@@ -1,6 +1,9 @@
 import CategoryPage from "@/components/_pages/category";
 import { getServerSidePropsWrapper } from "@/lib/getServerSidePropsWrapper";
-import { getCategoryDetailsBySlug, getSubCategoriesByParentId } from "@/lib/api/queries/categories";
+import {
+  getCategoryDetailsBySlug,
+  getSubCategoriesByParentId,
+} from "@/lib/api/queries/product-categories";
 import { getProductsByCategoryId } from "@/lib/api/queries/products";
 
 import type { GetServerSideProps } from "next";

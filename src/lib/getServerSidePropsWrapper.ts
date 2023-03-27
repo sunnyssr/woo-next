@@ -1,5 +1,5 @@
 import type { GetServerSideProps } from "next";
-import { getMainCategories } from "./api/queries/categories";
+import { getMainCategories } from "./api/queries/product-categories";
 
 const getWrappedServerSideProps: GetServerSideProps = async () => {
   const mainCategories = await getMainCategories();

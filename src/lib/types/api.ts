@@ -210,12 +210,15 @@ export type BlogPostListItem = {
   };
 };
 
-export type BlogCategoryListItem = {
+export type BlogTaxonomyListItem = {
   id: number;
   count: number;
   description: string;
   slug: string;
   name: string;
   taxonomy: string;
+};
+
+export type BlogCategoryListItem = BlogTaxonomyListItem & {
   parent: number;
 };

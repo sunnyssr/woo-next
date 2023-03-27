@@ -4,7 +4,7 @@ import type { BlogPostListItem } from "@/lib/types/api";
 
 type BlogPostsListProps = {
   blogPosts: BlogPostListItem[];
-  darkMode: boolean;
+  darkMode?: boolean;
 };
 const BlogPostsList = ({ blogPosts, darkMode = false }: BlogPostsListProps) => {
   console.log(blogPosts);

@@ -50,7 +50,7 @@ const BlogPostItem = (props: BlogPostItemProps) => {
         </Link>
 
         <div
-          className={`px-6 pt-4 pb-4 ${
+          className={`px-6 pt-4 pb-5 ${
             props.darkMode ? "bg-white bg-opacity-10 text-white" : "text-black bg-white"
           } `}
         >

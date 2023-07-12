@@ -1,32 +1,36 @@
 import { ProductListItem } from "@/lib/types/api";
-import { wooClient } from "../client";
+import { wpBaseClient } from "../client";
 import { WOO_GET_PRODUCTS_ENDPOINT } from "../endpoints";
 
-export const getFeaturedProducts = async (): Promise<ProductListItem[] | void> => {
+export const getProducts = async (
+  query: Record<string, any> = {}
+): Promise<ProductListItem[] | void> => {
   try {
-    const response = await wooClient.get(WOO_GET_PRODUCTS_ENDPOINT, { featured: true });
+    const response = await wpBaseClient("GET", WOO_GET_PRODUCTS_ENDPOINT, query);
     const json = await response.json();
     return json as ProductListItem[];
   } catch (error) {
-    console.log("[getFeaturedProducts]: error while fetching featured products" + error);
+    console.log("[getProducts]: error while fetching products" + error);
   }
+};
+
+export const getFeaturedProducts = async (): Promise<ProductListItem[] | void> => {
+  return getProducts({ featured: true });
 };
 
 export const getProductsByCategoryId = async (
   categoryId: number
 ): Promise<ProductListItem[] | void> => {
-  try {
-    const response = await wooClient.get(WOO_GET_PRODUCTS_ENDPOINT, { category: categoryId });
-    const json = await response.json();
-    return json as ProductListItem[];
-  } catch (error) {
-    console.log("[getProductsByCategoryId]: error while fetching products by category" + error);
-  }
+  return getProducts({ category: categoryId });
 };
 
 export const getProductBySlug = async (productSlug: string): Promise<ProductListItem[] | void> => {
+  return getProducts({ slug: productSlug });
+};
+
+export const getProductById = async (id: string): Promise<ProductListItem | void> => {
   try {
-    const response = await wooClient.get(WOO_GET_PRODUCTS_ENDPOINT, { slug: productSlug });
+    const response = await wpBaseClient("GET", `${WOO_GET_PRODUCTS_ENDPOINT}/${id}`, {});
     const json = await response.json();
     return json;
   } catch (error) {
@@ -34,9 +38,11 @@ export const getProductBySlug = async (productSlug: string): Promise<ProductList
   }
 };
 
-export const getProductById = async (id: string): Promise<ProductListItem | void> => {
+export const getRelatedProducts = async (id: number): Promise<ProductListItem | void> => {
   try {
-    const response = await wooClient.get(`${WOO_GET_PRODUCTS_ENDPOINT}/${id}`);
+    const response = await wpBaseClient("GET", `hw/v1/products/related/`, {
+      id,
+    });
     const json = await response.json();
     return json;
   } catch (error) {

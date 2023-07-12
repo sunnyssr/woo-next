@@ -5,21 +5,44 @@ import { Bars3Icon, XMarkIcon, ShoppingCartIcon } from "@heroicons/react/24/outl
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import Container from "../container/container";
 import { BlogIcon, CategoryIcon } from "../icons";
-import { classNames } from "../../../lib/utils";
+import { useCart } from "@/lib/context/cartContext";
+import { classNames } from "@/lib/utils";
 
 import type { ProductCategoryItem } from "@/lib/types/api";
+import { useScroll, motion, useTransform } from "framer-motion";
+import { PRIMARY_COLOR, SECONDARY_COLOR, HEADER_BOX_SHADOW } from "@/lib/colors";
 
 type HeaderProps = {
   mainCategories?: ProductCategoryItem[];
+  isHomepage: boolean;
 };
 
 const Header = (props: HeaderProps) => {
+  const { itemsCount } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { scrollY } = useScroll();
+  const padding = useTransform(scrollY, [0, 16], [16, 0]);
+  const primaryColor = useTransform(scrollY, [0, 500], [SECONDARY_COLOR, PRIMARY_COLOR]);
+  const secondaryColor = useTransform(scrollY, [0, 500], [PRIMARY_COLOR, SECONDARY_COLOR]);
+  const backgroundColor = useTransform(scrollY, [0, 500], ["#FFFFFF00", "#FFFFFFFF"]);
+  const boxShadow = useTransform(scrollY, (value) => (value > 16 ? HEADER_BOX_SHADOW : "none"));
 
   return (
-    <header className="shadow-sm">
+    <motion.header
+      style={
+        props.isHomepage
+          ? {
+              color: primaryColor,
+              background: backgroundColor,
+              padding,
+              boxShadow,
+            }
+          : { boxShadow: HEADER_BOX_SHADOW }
+      }
+      className={`fixed top-0 w-full z-50 bg-white transition-colors`}
+    >
       <Container>
-        <nav className="flex justify-between items-center">
+        <nav className="flex items-center justify-between">
           <Logo />
           <div className="flex lg:hidden">
             <button
@@ -28,20 +51,42 @@ const Header = (props: HeaderProps) => {
               onClick={() => setMobileMenuOpen(true)}
             >
               <span className="sr-only">Open main menu</span>
-              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+              <Bars3Icon className="w-6 h-6" aria-hidden="true" />
             </button>
           </div>
-          <ul className="hidden lg:flex items-center gap-6">
+          <ul className={`hidden lg:flex items-center gap-6`}>
             <li>
               <CategoryMenuItem categories={props.mainCategories || []} />
             </li>
             <li>
-              <Link href="/blog" className="flex items-center font-medium tracking-wide py-3">
-                <BlogIcon className="h-4 w-4 mr-1" /> Blog
+              <Link href="/blog" className="flex items-center py-3 font-medium tracking-wide">
+                <BlogIcon className="w-4 h-4 mr-1" /> Blog
               </Link>
             </li>
-            <li className="flex items-center font-medium tracking-wide py-3">
-              <ShoppingCartIcon className="h-7 w-7 text-black" />
+            <li className="flex items-center py-3 font-medium tracking-wide">
+              <Link href="/cart" className="relative">
+                <ShoppingCartIcon className="h-7 w-7" />
+                {itemsCount ? (
+                  <motion.span
+                    style={
+                      props.isHomepage
+                        ? {
+                            color: secondaryColor,
+                            background: primaryColor,
+                          }
+                        : {
+                            color: SECONDARY_COLOR,
+                            background: PRIMARY_COLOR,
+                          }
+                    }
+                    className={`absolute -top-1 -right-1 rounded-full ${
+                      itemsCount >= 10 ? "h-5 w-5 text-xxs" : "h-4 w-4 text-xs"
+                    } flex items-center justify-center`}
+                  >
+                    {itemsCount}
+                  </motion.span>
+                ) : null}
+              </Link>
             </li>
           </ul>
         </nav>
@@ -51,7 +96,7 @@ const Header = (props: HeaderProps) => {
         setMobileMenuOpen={setMobileMenuOpen}
         categories={props.mainCategories || []}
       />
-    </header>
+    </motion.header>
   );
 };
 
@@ -60,7 +105,7 @@ export default Header;
 const Logo = () => {
   return (
     <Link href="/" className="py-3">
-      <h1 className="font-medium m-0 text-xl leading-6">WooNext</h1>
+      <h1 className="m-0 text-xl font-medium leading-6">WooNext</h1>
       <p className="m-0 text-sm">Next.js WooCommerce Theme</p>
     </Link>
   );
@@ -74,9 +119,9 @@ const CategoryMenuItem = (props: CategoryMenuItemProps) => {
   return (
     <Popover.Group>
       <Popover className="relative">
-        <Popover.Button className="flex items-center font-medium tracking-wide leading-6 text-gray-900 py-3">
-          <CategoryIcon className="h-4 w-4 mr-1" /> Categories
-          <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
+        <Popover.Button className="flex items-center py-3 font-medium leading-6 tracking-wide">
+          <CategoryIcon className="w-4 h-4 mr-1" /> Categories
+          <ChevronDownIcon className="flex-none w-5 h-5 text-gray-400" aria-hidden="true" />
         </Popover.Button>
 
         <Transition
@@ -94,7 +139,7 @@ const CategoryMenuItem = (props: CategoryMenuItemProps) => {
                 <Link
                   href={`/category/${category.slug}`}
                   key={category.slug}
-                  className="block relative font-normal text-gray-900 px-4 py-2 hover:bg-gray-50"
+                  className="relative block px-4 py-2 font-normal text-gray-900 hover:bg-gray-50"
                 >
                   {category.name}
                   <span className="absolute inset-0" />
@@ -118,7 +163,7 @@ const MobileNav = ({ mobileMenuOpen, setMobileMenuOpen, categories }: MobileNavP
   return (
     <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
       <div className="fixed inset-0 z-10" />
-      <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+      <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full px-6 py-6 overflow-y-auto bg-white sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
         <div className="flex items-center justify-between">
           <Logo />
           <button
@@ -127,12 +172,12 @@ const MobileNav = ({ mobileMenuOpen, setMobileMenuOpen, categories }: MobileNavP
             onClick={() => setMobileMenuOpen(false)}
           >
             <span className="sr-only">Close menu</span>
-            <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+            <XMarkIcon className="w-6 h-6" aria-hidden="true" />
           </button>
         </div>
-        <div className="mt-6 flow-root">
+        <div className="flow-root mt-6">
           <div className="-my-6 divide-y divide-gray-500/10">
-            <div className="space-y-2 py-6">
+            <div className="py-6 space-y-2">
               <Disclosure as="div" className="-mx-3">
                 {({ open }) => (
                   <>
@@ -152,7 +197,7 @@ const MobileNav = ({ mobileMenuOpen, setMobileMenuOpen, categories }: MobileNavP
                           key={category.slug}
                           as={Link}
                           href={`/category/${category.slug}`}
-                          className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                          className="block py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50"
                         >
                           {category.name}
                         </Disclosure.Button>
@@ -163,7 +208,7 @@ const MobileNav = ({ mobileMenuOpen, setMobileMenuOpen, categories }: MobileNavP
               </Disclosure>
               <Link
                 href="/blog"
-                className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                className="block px-3 py-2 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50"
               >
                 Blog
               </Link>

@@ -4,9 +4,12 @@ import Container from "@/components/common/container/container";
 import Layout from "@/components/common/layout/layout";
 import { ProductListItem } from "../../../lib/types/api";
 import ImagesSlider from "@/components/common/images-slider/images-slider";
+import ProductsList from "@/components/common/products-list/products-list";
+import VariantPicker from "@/components/common/variant-picker/variant-picker";
 
 export type ProductPageProps = {
   product: ProductListItem;
+  relatedProducts: ProductListItem[];
 };
 const ProductPage = (props: ProductPageProps) => {
   return (
@@ -32,7 +35,12 @@ const ProductPage = (props: ProductPageProps) => {
               className="text-gray-600 tracking-wide"
               dangerouslySetInnerHTML={{ __html: props.product.description }}
             ></div>
+            <VariantPicker product={props.product} />
           </div>
+        </Container>
+        <Container className="py-6 w-full">
+          <h2 className="mb-6 text-3xl font-medium text-left">Related Products</h2>
+          <ProductsList products={props.relatedProducts || []} />
         </Container>
       </main>
     </Layout>

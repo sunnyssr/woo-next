@@ -95,6 +95,5 @@ export const wpBaseClient = (
   return fetch(url.href, {
     next: { revalidate: 15 * 60 },
     ...config,
-    cache: "force-cache",
   });
 };

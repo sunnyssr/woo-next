@@ -7,7 +7,6 @@ type BlogPostsListProps = {
   darkMode?: boolean;
 };
 const BlogPostsList = ({ blogPosts, darkMode = false }: BlogPostsListProps) => {
-  console.log(blogPosts);
   return (
     <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
       {blogPosts.map((blogPost) => (

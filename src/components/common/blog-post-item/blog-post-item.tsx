@@ -44,6 +44,7 @@ const BlogPostItem = (props: BlogPostItemProps) => {
               alt={featuredMedia.alt_text}
               width={400}
               height={400}
+              sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
             />
           ) : null}
           <span className="sr-only">{props.blogPost.title.rendered}</span>
@@ -84,6 +85,7 @@ const BlogPostItem = (props: BlogPostItemProps) => {
               }`}
             >
               Read More
+              <span className="sr-only">{props.blogPost.title.rendered}</span>
             </button>
           </Link>
         </div>

@@ -4,7 +4,8 @@ import { CartItem, GetCartResponse } from "../types/api";
 type ICartContext = {
   cartItems: CartItem[];
   itemsCount: number;
-  addItemToCart: (productId: string, quantity: number) => Promise<void>;
+  isAddingToCart: boolean;
+  addItemToCart: (productId: string, quantity: number) => Promise<boolean>;
   updateItemQuantity: (cartItemKey: string, quantity: number) => Promise<void>;
 };
 
@@ -75,11 +76,13 @@ export const CartContextProvider = React.memo(function CartContextProvider({
         setCartItems(json.cart.items);
         setItemsCount(json.cart.items_count || 0);
       }
+      return true;
     } catch (error) {
       console.error(error);
     } finally {
       setIsAddingToCart(false);
     }
+    return false;
   };
 
   const updateItemQuantity = async (cartItemKey: string, quantity: number = 1) => {
@@ -123,6 +126,8 @@ export const CartContextProvider = React.memo(function CartContextProvider({
       cartItems,
 
       itemsCount,
+
+      isAddingToCart,
 
       addItemToCart,
 

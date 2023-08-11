@@ -14,6 +14,21 @@ module.exports = {
         xxs: "0.625rem",
         xxxs: "0.5rem",
       },
+      keyframes: {
+        flash: {
+          "0%": {
+            top: "1em",
+            opacity: 1,
+          },
+          "100%": {
+            top: "-1em",
+            opacity: 0,
+          }
+        },
+      },
+      animation: {
+        flash: 'flash 1s ease-in 1',
+      }
     },
   },
   plugins: [],

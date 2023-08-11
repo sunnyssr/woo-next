@@ -10,8 +10,9 @@ type VariantPickerProps = {
   containerClassname?: string;
 };
 const VariantPicker = (props: VariantPickerProps) => {
-  const { cartItems, addItemToCart } = useCart();
+  const { cartItems, isAddingToCart, addItemToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const [showAddedToCartFlash, setShowAddedToCartFlash] = useState(false)
   const [selectedVariant, setSelectedVariant] = useState<ProductListItem["variations"][0] | null>(
     null
   );
@@ -77,9 +78,11 @@ const VariantPicker = (props: VariantPickerProps) => {
     }));
   };
 
-  const selectedVariantQuantityInCart = selectedVariant
+  const hasVariants = props.product.variations.length > 0
+
+  const selectedVariantQuantityInCart = hasVariants ? (selectedVariant
     ? cartItems.find((cartItem) => cartItem.id === selectedVariant?.id)?.quantity
-    : 0;
+    : 0) : cartItems.find((cartItem) => cartItem.id === props.product?.id)?.quantity;
 
   return (
     <div className={`w-full max-w-full ${props.containerClassname || ""}`}>
@@ -93,9 +96,8 @@ const VariantPicker = (props: VariantPickerProps) => {
                 <li key={term.id}>
                   <button
                     onClick={() => handleVariationSelect(term.slug, variation.name)}
-                    className={`text-sm px-3 py-1 rounded-full border border-black border-solid ${
-                      isActive ? "text-white bg-black" : "text-black bg-white"
-                    }`}
+                    className={`text-sm px-3 py-1 rounded-full border border-black border-solid ${isActive ? "text-white bg-black" : "text-black bg-white"
+                      }`}
                   >
                     {term.name}
                   </button>
@@ -125,13 +127,20 @@ const VariantPicker = (props: VariantPickerProps) => {
       <div className="mt-6">
         <button
           onClick={() => {
-            if (selectedVariant) {
-              addItemToCart(String(selectedVariant.id), quantity);
+            if (hasVariants ? selectedVariant : true) {
+              addItemToCart(String(hasVariants && selectedVariant ? selectedVariant.id : props.product.id), quantity).then(succes => {
+                setShowAddedToCartFlash(true)
+                window.setTimeout(() => {
+                  setShowAddedToCartFlash(false)
+                }, 1000)
+
+              });
             }
           }}
-          className="w-full px-3 py-1.5 text-xl font-light border border-black border-solid rounded-md sm:px-6"
+          className="w-full px-3 py-1.5 text-xl font-light border border-black border-solid rounded-md sm:px-6 relative"
         >
-          Add to Cart
+          {isAddingToCart ? "Adding to Cart..." : "Add to Cart"}
+          {showAddedToCartFlash ? <span className="animate-flash absolute left-0 right-0">+Added to Cart</span> : null}
         </button>
       </div>
     </div>

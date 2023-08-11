@@ -3,15 +3,20 @@ import Container from "@/components/common/container/container";
 import Layout from "@/components/common/layout/layout";
 import ProductsList from "@/components/common/products-list/products-list";
 import CategoriesList from "@/components/common/categories-list/categories-list";
+import Pagination from "@/components/common/pagination/pagination";
 
 import type { ProductListItem, ProductCategoryItem } from "@/lib/types/api";
 
-type CategoryPageProps = {
+type ProductCategoryPageProps = {
+  pageNumber: number;
+  perPage: number;
+  hasNextPage: boolean;
+  categorySlug: string;
   products: ProductListItem[];
   categories: ProductCategoryItem[];
 };
 
-const CategoryPage = (props: CategoryPageProps) => {
+const ProductCategoryPage = (props: ProductCategoryPageProps) => {
   return (
     <Layout>
       <Head>
@@ -34,10 +39,15 @@ const CategoryPage = (props: CategoryPageProps) => {
         <Container className="py-6">
           <h2 className="text-center font-medium text-3xl mb-6">Products</h2>
           <ProductsList products={props.products} />
+          <Pagination
+            pageNumber={props.pageNumber}
+            commonPath={`/category/${props.categorySlug}`}
+            hasNextPage={props.hasNextPage}
+          />
         </Container>
       </main>
     </Layout>
   );
 };
 
-export default CategoryPage;
+export default ProductCategoryPage;

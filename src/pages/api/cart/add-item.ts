@@ -1,4 +1,6 @@
 import { Cart } from "@/lib/types/api";
+import { WPBaseUrl } from "@/lib/constants"
+
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
@@ -24,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     headers.append("Nonce", existingNonce);
   }
   const response = await fetch(
-    `http://woocommercenextjsrestapi.local/wp-json/wc/store/v1/cart/add-item?id=${productId}&quantity=${quantity}`,
+    `${WPBaseUrl}/wp-json/wc/store/v1/cart/add-item?id=${productId}&quantity=${quantity}`,
     {
       headers: headers,
       method: "POST",

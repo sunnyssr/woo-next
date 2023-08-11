@@ -21,28 +21,6 @@ type StorefrontProps = {
   slideshow: SlideshowItem;
 };
 
-const slides = [
-  {
-    title: "title",
-    description: "description",
-    image: {
-      id: 4,
-      src: "http://woocommercenextjsrestapi.local/wp-content/uploads/2023/03/pexels-pixabay-147411.jpg",
-      alt: "",
-      name: "large",
-    },
-  },
-  {
-    title: "title",
-    description: "description",
-    image: {
-      id: 4,
-      src: "http://woocommercenextjsrestapi.local/wp-content/uploads/2023/03/pexels-pixabay-147411.jpg",
-      alt: "",
-      name: "large",
-    },
-  },
-];
 export default function Storefront(props: StorefrontProps) {
   return (
     <Layout isHomepage={true} categories={props.mainCategories}>
@@ -53,7 +31,7 @@ export default function Storefront(props: StorefrontProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="">
-        <HeroSlider slideshow={props.slideshow} slides={slides} />
+        <HeroSlider slideshow={props.slideshow} />
         <Container className="py-10">
           <h2 className="mb-6 text-3xl font-medium text-center">Categories</h2>
           <CategoriesList categories={props.mainCategories} />

@@ -9,15 +9,9 @@ type HeroSliderProps = {
 };
 
 const HeroSlider = (props: HeroSliderProps) => {
-  const parsedSlides = [
-    ...parse(props.slideshow.content.raw || "").filter(
-      (block) => block.blockName === "headless-woo/slide"
-    ),
-    ...parse(props.slideshow.content.raw || "").filter(
-      (block) => block.blockName === "headless-woo/slide"
-    ),
-  ];
-  console.log(parsedSlides);
+  const parsedSlides = parse(props.slideshow.content.raw || "").filter(
+    (block) => block.blockName === "headless-woo/slide"
+  );
 
   const slidesContainerRef = useRef<HTMLDivElement>(null);
   const pos = useRef({

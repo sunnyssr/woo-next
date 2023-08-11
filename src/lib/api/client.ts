@@ -18,22 +18,22 @@ const getConfig = (
   }
   return isHttps
     ? {
-        consumer_key: WooConsumerKey,
-        consumer_secret: WooConsumerSecret,
-      }
+      consumer_key: WooConsumerKey,
+      consumer_secret: WooConsumerSecret,
+    }
     : new OAuth({
-        consumer: {
-          key: WooConsumerKey,
-          secret: WooConsumerSecret,
-        },
-        signature_method: "HMAC-SHA256",
-        hash_function: (base, key) => {
-          return createHmac("sha256", key).update(base).digest("base64");
-        },
-      }).authorize({
-        url,
-        method,
-      });
+      consumer: {
+        key: WooConsumerKey,
+        secret: WooConsumerSecret,
+      },
+      signature_method: "HMAC-SHA256",
+      hash_function: (base, key) => {
+        return createHmac("sha256", key).update(base).digest("base64");
+      },
+    }).authorize({
+      url,
+      method,
+    });
 };
 
 export const createRequest = (
@@ -83,7 +83,7 @@ export const wooClient = {
   },
 };
 
-export const wpBaseClient = (
+export const wpBaseClient = async (
   method: "GET" | "POST" | "PUT" | "DELETE" | "OPTIONS",
   endpoint: string,
   params: string | string[][] | Record<string, any> | URLSearchParams | undefined = {},
@@ -105,8 +105,12 @@ export const wpBaseClient = (
     ).toString("base64")}`,
   };
 
-  return fetch(url.href, {
+  const response = await fetch(url.href, {
     next: { revalidate: 15 * 60 },
     ...config,
   });
+  if (!response.ok) {
+    throw new Error("Not 2xx response", { cause: response });
+  }
+  return response
 };

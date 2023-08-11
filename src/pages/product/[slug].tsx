@@ -48,7 +48,7 @@ export const getStaticProps: GetStaticProps = getStaticPropsWrapper(async (conte
   return {
     props: {
       product: product,
-      relatedProducts,
+      relatedProducts: relatedProducts || [],
     },
     revalidate: 15 * 60,
   };

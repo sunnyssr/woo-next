@@ -44,7 +44,7 @@ export const getProductById = async (id: string): Promise<ProductListItem | void
   }
 };
 
-export const getRelatedProducts = async (id: number): Promise<ProductListItem | void> => {
+export const getRelatedProducts = async (id: number): Promise<ProductListItem[] | void> => {
   try {
     const response = await wpBaseClient("GET", `hw/v1/products/related/`, {
       id,

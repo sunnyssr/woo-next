@@ -1,4 +1,10 @@
-import { WooConsumerKey, WooConsumerSecret, WPBaseUrl } from "@/lib/constants";
+import {
+  WooConsumerKey,
+  WooConsumerSecret,
+  WPApplicationPassword,
+  WPApplicationUsername,
+  WPBaseUrl,
+} from "@/lib/constants";
 import createHmac from "create-hmac";
 import OAuth from "oauth-1.0a";
 
@@ -92,6 +98,13 @@ export const wpBaseClient = (
   if (data) {
     config.body = JSON.stringify(data);
   }
+  config.headers = {
+    ...(config.headers || {}),
+    Authorization: `Basic ${Buffer.from(
+      WPApplicationUsername + ":" + WPApplicationPassword
+    ).toString("base64")}`,
+  };
+
   return fetch(url.href, {
     next: { revalidate: 15 * 60 },
     ...config,

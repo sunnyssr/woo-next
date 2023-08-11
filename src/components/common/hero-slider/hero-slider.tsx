@@ -1,58 +1,92 @@
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import Image from "next/image";
+import { useEffect, useRef } from "react";
+import { SlideshowItem } from "@/lib/types/api";
+import { parse } from "@wordpress/block-serialization-default-parser";
+import RenderBlocks from "@/components/blocks";
 
 type HeroSliderProps = {
+  slideshow: SlideshowItem;
   className?: string;
-  slides: {
-    image: {
-      id: number;
-      src: string;
-      name: string;
-      alt: string;
-    };
-    title: string;
-    description: string;
-  }[];
 };
 
 const HeroSlider = (props: HeroSliderProps) => {
-  const [width, setWidth] = useState(0);
-  const innerCarouselRef = useRef<HTMLDivElement>(null as never);
+  const parsedSlides = [
+    ...parse(props.slideshow.content.raw || "").filter(
+      (block) => block.blockName === "headless-woo/slide"
+    ),
+    ...parse(props.slideshow.content.raw || "").filter(
+      (block) => block.blockName === "headless-woo/slide"
+    ),
+  ];
+  console.log(parsedSlides);
+
+  const slidesContainerRef = useRef<HTMLDivElement>(null);
+  const pos = useRef({
+    left: 0,
+    x: 0,
+  });
+
+  const lastStablePosition = useRef(0);
 
   useEffect(() => {
-    if (!innerCarouselRef.current) return;
-    setWidth(innerCarouselRef.current?.scrollWidth - innerCarouselRef.current?.offsetWidth);
-  }, [props.slides]);
+    const mouseMoveHandler = function (e: MouseEvent) {
+      if (!slidesContainerRef.current) return null;
+
+      const dx = e.clientX - pos.current.x;
+      slidesContainerRef.current.scrollLeft = pos.current.left - dx;
+    };
+
+    const mouseUpHandler = function (_: MouseEvent) {
+      let endPosition = null;
+      const slideWidth = slidesContainerRef.current?.clientWidth;
+      if (!slideWidth) return null;
+      if (Math.abs(slidesContainerRef.current?.scrollLeft - pos.current.left) < slideWidth / 16) {
+        endPosition = Math.round(slidesContainerRef.current?.scrollLeft / slideWidth) * slideWidth;
+      } else {
+        if (slidesContainerRef.current?.scrollLeft - pos.current.left > 0) {
+          endPosition = (Math.round(pos.current.left / slideWidth) + 1) * slideWidth;
+        } else {
+          endPosition = (Math.round(pos.current.left / slideWidth) - 1) * slideWidth;
+        }
+      }
+      if (!slidesContainerRef.current) return null;
+      slidesContainerRef.current.scroll({
+        behavior: "smooth",
+        left: endPosition,
+      });
+
+      lastStablePosition.current = slidesContainerRef.current?.scrollLeft!;
+      slidesContainerRef.current.style.removeProperty("cursor");
+      slidesContainerRef.current.style.removeProperty("user-select");
+      // ele.current.style.removeProperty("scroll-snap-type");
+      window.removeEventListener("mousemove", mouseMoveHandler);
+      window.removeEventListener("mouseup", mouseUpHandler);
+    };
+
+    const mouseDownHandler = function (e: MouseEvent) {
+      if (!slidesContainerRef.current) return null;
+      pos.current = {
+        left: slidesContainerRef.current.scrollLeft,
+        x: e.clientX,
+      };
+      slidesContainerRef.current.style.cursor = "grabbing";
+      slidesContainerRef.current.style.userSelect = "none";
+      slidesContainerRef.current.style.scrollSnapType = "none";
+      window.addEventListener("mousemove", mouseMoveHandler);
+      window.addEventListener("mouseup", mouseUpHandler);
+    };
+
+    if (!slidesContainerRef.current) return;
+    const slidesContainer = slidesContainerRef.current;
+    slidesContainer.addEventListener("mousedown", mouseDownHandler);
+    return () => {
+      slidesContainer.removeEventListener("mousedown", mouseDownHandler);
+    };
+  }, []);
 
   return (
-    <motion.div
-      className={`w-full h-screen mx-auto overflow-hidden cursor-grab ${props.className || ""}`}
-      whileTap={{ cursor: "grabbing" }}
-    >
-      <motion.div
-        className="flex max-w-max h-full"
-        drag="x"
-        dragConstraints={{ right: 0, left: -width }}
-        ref={innerCarouselRef}
-      >
-        {props.slides.map((slide) => (
-          <motion.div className={`min-w-full h-full relative`} key={slide.image.id}>
-            <div
-              className="absolute top-0 left-0 h-full w-full"
-              style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.4), rgba(0,0,0,0))" }}
-            />
-            <Image
-              width={500}
-              height={600}
-              src={slide.image.src}
-              alt={slide.image.alt}
-              className="object-cover w-full h-full pointer-events-none select-none aspect-product-image"
-            />
-          </motion.div>
-        ))}
-      </motion.div>
-    </motion.div>
+    <div className="w-full flex overflow-hidden w-screen h-screen" ref={slidesContainerRef}>
+      <RenderBlocks blocks={parsedSlides} />
+    </div>
   );
 };
 

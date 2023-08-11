@@ -248,6 +248,7 @@ export type BlogPostListItem = {
     rendered: string;
   };
   content: {
+    raw?: string;
     rendered: string;
     protected: boolean;
   };
@@ -290,6 +291,8 @@ export type BlogPostListItem = {
     "wp:featuredmedia": BlogFeaturedMedia[];
   };
 };
+
+export type SlideshowItem = BlogPostListItem & {};
 
 export type BlogTaxonomyListItem = {
   id: number;

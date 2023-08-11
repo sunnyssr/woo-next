@@ -2,18 +2,19 @@ import { load } from "cheerio";
 import Storefront from "@/components/_pages/storefront";
 import { getServerSidePropsWrapper } from "@/lib/getServerSidePropsWrapper";
 import { getFeaturedProducts } from "@/lib/api/queries/products";
-import { getPosts } from "@/lib/api/queries/posts";
+import { getPosts, getSlideshows } from "@/lib/api/queries/posts";
 
 import type { GetServerSideProps } from "next";
 
 export default Storefront;
 
 export const getServerSideProps: GetServerSideProps = getServerSidePropsWrapper(async (ctx) => {
-  const [featuredProducts, postsResp] = await Promise.all([
+  const [featuredProducts, postsResp, slideshowsResp] = await Promise.all([
     getFeaturedProducts(),
     getPosts({
       per_page: 3,
     }),
+    getSlideshows({ context: "edit" }),
   ]);
 
   if (!postsResp) {
@@ -33,6 +34,7 @@ export const getServerSideProps: GetServerSideProps = getServerSidePropsWrapper(
     props: {
       featuredProducts: featuredProducts || [],
       blogPosts: postsData || [],
+      slideshow: slideshowsResp?.slideshows[0] || null,
     },
   };
 });

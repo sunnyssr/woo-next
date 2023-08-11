@@ -11,11 +11,11 @@ import { getStaticPropsWrapper } from "@/lib/getStaticPropsWrapper";
 
 export default ProductPage;
 
-export const getStaticPaths: GetStaticPaths = async (ctx) => {
-  const products = await getProducts({ per_page: 100 });
+export const getStaticPaths: GetStaticPaths = async () => {
+  const productsResponse = await getProducts({ per_page: 100 });
 
   return {
-    paths: products?.map((product) => ({
+    paths: productsResponse?.products?.map((product) => ({
       params: {
         // Todo:  change to slug
         slug: product.slug,

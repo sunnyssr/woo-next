@@ -57,9 +57,9 @@ export const CartContextProvider = React.memo(function CartContextProvider({
     }
   };
 
-  const addItemToCart = async (productId: string, quantity: number = 1) => {
+  const addItemToCart = async (productId: string, quantity: number = 1): Promise<boolean> => {
     setIsAddingToCart(true);
-    if (!cartToken || !nonce) return;
+    if (!cartToken || !nonce) return false;
     try {
       const headers = new Headers({
         "Content-Type": "application/json",
@@ -118,8 +118,12 @@ export const CartContextProvider = React.memo(function CartContextProvider({
     if (typeof window != "undefined") {
       setCartToken(window.localStorage?.getItem("__WOO_CART_TOKEN"));
     }
-    fetchCart();
   }, []);
+  useEffect(() => {
+    if (nonce) return
+    fetchCart();
+
+  }, [cartToken])
 
   const cartService = useMemo<ICartContext>(() => {
     return {
@@ -133,7 +137,7 @@ export const CartContextProvider = React.memo(function CartContextProvider({
 
       updateItemQuantity,
 
-      removeItemFromCart: () => {},
+      removeItemFromCart: () => { },
     };
   }, [cartItems]); //eslint-disable-line react-hooks/exhaustive-deps
 

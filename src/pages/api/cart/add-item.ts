@@ -10,12 +10,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   const existingCartToken = String(req.headers["cart-token"]);
   const existingNonce = String(req.headers["nonce"]);
-  console.log(req.headers);
 
   const productId = String(req.query["id"]);
   const quantity = String(req.query["quantity"]);
 
-  console.log({ productId, quantity, existingNonce });
   const headers = new Headers({
     "Content-Type": "application/json",
   });

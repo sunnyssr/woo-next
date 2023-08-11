@@ -8,7 +8,6 @@ type Data = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   const existingCartToken = String(req.headers["cart-token"]);
 
-  console.log(existingCartToken);
   const headers = new Headers({
     "Content-Type": "application/json",
   });

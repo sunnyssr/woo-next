@@ -31,7 +31,7 @@ export const getStaticProps: GetStaticProps = getStaticPropsWrapper(async (conte
 
   const product = products?.[0];
 
-  if (!product) {
+  if (!product && !Number.isNaN(Number(productSlug))) {
     const product = await getProductById(productSlug);
     if (product) {
       return { redirect: { destination: `product/${product.slug}` }, props: {} };

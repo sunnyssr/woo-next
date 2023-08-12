@@ -24,7 +24,7 @@ export const getServerSideProps: GetServerSideProps = getServerSidePropsWrapper(
   }
 
   const postsData = await Promise.all(
-    postsResp.posts.map((post) => {
+    (postsResp.posts || []).map((post) => {
       post.excerpt.rendered = load(post.excerpt.rendered).text();
       return post;
     })
@@ -34,7 +34,7 @@ export const getServerSideProps: GetServerSideProps = getServerSidePropsWrapper(
     props: {
       featuredProducts: featuredProducts || [],
       blogPosts: postsData || [],
-      slideshow: slideshowsResp?.slideshows[0] || null,
+      slideshow: slideshowsResp?.slideshows?.[0] || null,
     },
   };
 });

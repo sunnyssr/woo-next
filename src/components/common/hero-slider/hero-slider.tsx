@@ -22,14 +22,14 @@ const HeroSlider = (props: HeroSliderProps) => {
   const lastStablePosition = useRef(0);
 
   useEffect(() => {
-    const mouseMoveHandler = function (e: MouseEvent) {
+    const mouseMoveHandler = function(e: MouseEvent) {
       if (!slidesContainerRef.current) return null;
 
       const dx = e.clientX - pos.current.x;
       slidesContainerRef.current.scrollLeft = pos.current.left - dx;
     };
 
-    const mouseUpHandler = function (_: MouseEvent) {
+    const mouseUpHandler = function(_: MouseEvent) {
       let endPosition = null;
       const slideWidth = slidesContainerRef.current?.clientWidth;
       if (!slideWidth) return null;
@@ -56,7 +56,7 @@ const HeroSlider = (props: HeroSliderProps) => {
       window.removeEventListener("mouseup", mouseUpHandler);
     };
 
-    const mouseDownHandler = function (e: MouseEvent) {
+    const mouseDownHandler = function(e: MouseEvent) {
       if (!slidesContainerRef.current) return null;
       pos.current = {
         left: slidesContainerRef.current.scrollLeft,

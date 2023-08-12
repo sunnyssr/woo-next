@@ -18,7 +18,7 @@ type StorefrontProps = {
   featuredProducts: ProductListItem[];
   mainCategories: ProductCategoryItem[];
   blogPosts: BlogPostListItem[];
-  slideshow: SlideshowItem;
+  slideshow: SlideshowItem | null;
 };
 
 export default function Storefront(props: StorefrontProps) {
@@ -31,7 +31,10 @@ export default function Storefront(props: StorefrontProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="">
-        <HeroSlider slideshow={props.slideshow} />
+        {props.slideshow ?
+          <HeroSlider slideshow={props.slideshow} />
+          : null
+        }
         <Container className="py-10">
           <h2 className="mb-6 text-3xl font-medium text-center">Categories</h2>
           <CategoriesList categories={props.mainCategories} />
